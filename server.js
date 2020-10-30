@@ -8,7 +8,7 @@ app.use(express.static("public"));
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.listen(3000);
+app.listen(process.env.PORT);
 
 //Mongoose 
 const mongoose = require('mongoose');
