@@ -1,0 +1,78 @@
+<script>
+    $(document).ready(function(){
+        var url = "http://localhost:3000";
+        $("#mediasp").change(function(){
+            var data = new FormData();
+                jQuery.each(jQuery('#mediasp')[0].files, function(i, file) {
+                    console.log('media');
+                    data.append('media', file);
+                });
+                jQuery.ajax({
+                    url: url + "/uploadFile",
+                    data: data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    method: 'POST',
+                    type: 'POST', // For jQuery < 1.9
+                    success: function(data){
+                        if(data.kq==1){
+                            console.log(data);
+                           $("#AudioCateNew").attr("src", url+`/upload/`+ data.urlFile.filename );
+                         //   $('audio #AudioCateNew').attr("src", url+`/upload/`+ data.urlFile.filename );
+                        //     $('audio').get(0).load();
+                        //    $('audio').get(0).play();
+                           $("#file_MediaCate").val(data.urlFile.filename);
+                      
+                        }else{
+                            console.log("Upload fail!");
+                        }
+                    }
+                });
+        });  
+        $("#btn_Add_New_Cate").click(function(){
+            if($("#file_MediaCate").val().length==0 || $("#language").val().length==0){
+                alert("Vui long nhap Tu & chon am thanh");
+            }else{
+                $.post(url + "/wordKorea/add", {
+                    Language:$("#language").val(),
+                    Spelling:$("#spelling").val(),
+                    Meaning:$("#meaning").val(),
+                    Media:$("#file_MediaCate").val(),
+                    Types:$("#types").val(),    
+                }, function(data){
+                    if(data.kq==1){
+                        
+                        $.post(url + "/wordKorea", function(data){
+                            console.log(data);
+                        });
+                        
+                        
+                        console.log("Okay");
+                    }else{
+                        console.log("bad");
+                    }
+                });
+            }
+        });
+    });
+
+    </script>
+    
+    <div id="form_AddNewCate">
+        <input type="file" id="mediasp" /> <br/>
+        <input type="text" id="language" placeholder="Language" /> <br/>
+        <input type="text" id="spelling" placeholder="Spelling" /> <br/>
+        <input type="text" id="meaning" placeholder="Meaning" /> <br/>
+        <input type="text" id="types" placeholder="Types" /> <br/>
+        <input type="button" id="btn_Add_New_Cate" value="Add new" />
+        <input type="hidden" id="file_MediaCate" />
+            <!-- <audio controls>
+                <source id="AudioCateNew" src="" type="audio/mpeg">
+               
+            </audio> -->
+    </div>
+    
+    <ul id="list_Cate"></ul>
+    
+  
